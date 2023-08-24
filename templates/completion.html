@@ -7,7 +7,7 @@
 <ul>
   {% for response in responses %}
 
-  <li>{{ questions[responses.index(response)].prompt }} {{ response }}</li>
+  <li>{{ prompts[responses.index(response)].prompt }} {{ response }}</li>
 
   {% endfor %}
 </ul>
