@@ -30,12 +30,17 @@ def show_first_question():
 @app.get('/questions/<int:num>')
 def show_questions(num):
     """Shows form of current question with choices"""
+    # make var for session['responses]
+    responses = session['responses']
+
+    # accessing questions out of order
     if num > len(session['responses']):
         flash("You're trying to access an invalid question!!!")
-        return redirect(f'/questions/{len(session["responses"])}')
+        return redirect(f'/questions/{len(responses)}')
 
-    if len(session['responses']) >= len(survey.questions):
-        responses = session['responses']
+    # accessing questions when already completed
+    if len(responses) >= len(survey.questions):
+        responses = session['responses']  # need to reassign
         session['responses'] = responses
 
         flash("You're trying to access an invalid question!!!")
@@ -56,10 +61,11 @@ def handle_answer():
     responses.append(request.form['answer'])
     session['responses'] = responses
 
-    if len(session['responses']) > len(survey.questions) - 1:
+    # check if equal
+    if len(responses) >= len(survey.questions):
         return redirect('/completion')
 
-    return redirect(f'/questions/{len(session["responses"])}')
+    return redirect(f'/questions/{len(responses)}')
 
 
 @app.get('/completion')
