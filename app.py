@@ -51,8 +51,6 @@ def handle_answer():
 @app.get('/completion')
 def show_completion():
     """Show completion message at end of survey"""
-
-    print(responses)
     questions = survey.questions
 
     return render_template('completion.html',
