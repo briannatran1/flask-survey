@@ -32,7 +32,6 @@ def show_questions(num):
     """Shows form of current question with choices"""
     question = survey.questions[num]
 
-
     return render_template('question.html',
                            prompt=question.prompt,
                            choices=question.choices)
@@ -40,7 +39,7 @@ def show_questions(num):
 
 @app.post('/answer')
 def handle_answer():
-    '''Handle answer and redirect to next question page'''
+    """Handle answer and redirect to next question page"""
     responses.append(request.form['answer'])
 
     if len(responses) > len(survey.questions) - 1:
@@ -51,7 +50,7 @@ def handle_answer():
 
 @app.get('/completion')
 def show_completion():
-    '''Show completion message at end of survey'''
+    """Show completion message at end of survey"""
 
     print(responses)
     questions = survey.questions
