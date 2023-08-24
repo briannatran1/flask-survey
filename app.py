@@ -13,8 +13,6 @@ debug = DebugToolbarExtension(app)
 def show_survey_start():
     """Shows survey title, instructions, and start button"""
 
-    session["responses"] = []
-
     return render_template('survey_start.html',
                            title=survey.title,
                            instructions=survey.instructions)
@@ -23,6 +21,8 @@ def show_survey_start():
 @app.post('/begin')
 def show_first_question():
     """Redirects user to first question when clicking button"""
+
+    session["responses"] = []  # do not need to reassign if session is in here
 
     return redirect('/questions/0')
 
@@ -33,6 +33,9 @@ def show_questions(num):
     # make var for session['responses]
     responses = session['responses']
 
+    if not responses:
+        return redirect('/')
+
     # accessing questions out of order
     if num > len(session['responses']):
         flash("You're trying to access an invalid question!!!")
@@ -40,8 +43,8 @@ def show_questions(num):
 
     # accessing questions when already completed
     if len(responses) >= len(survey.questions):
-        responses = session['responses']  # need to reassign
-        session['responses'] = responses
+        # responses = session['responses']  # need to reassign
+        # session['responses'] = responses
 
         flash("You're trying to access an invalid question!!!")
         return redirect('/completion')
@@ -62,7 +65,7 @@ def handle_answer():
     session['responses'] = responses
 
     # check if equal
-    if len(responses) >= len(survey.questions):
+    if len(responses) == len(survey.questions):
         return redirect('/completion')
 
     return redirect(f'/questions/{len(responses)}')
