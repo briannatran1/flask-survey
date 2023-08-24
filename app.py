@@ -21,7 +21,14 @@ def show_survey_start():
 
 
 @app.post('/begin')
-def show_questions():
+def show_first_question():
     """Redirects user to first question when clicking button"""
 
     return redirect('/questions/0')
+
+
+@app.get('/questions/<int:num>')
+def show_questions():
+    """Shows form of current question with choices"""
+
+    return render_template('question.html')
