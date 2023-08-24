@@ -8,12 +8,12 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 debug = DebugToolbarExtension(app)
 
-responses = []
-
 
 @app.get('/')
 def show_survey_start():
     """Shows survey title, instructions, and start button"""
+
+    session["responses"] = []
 
     return render_template('survey_start.html',
                            title=survey.title,
@@ -30,6 +30,16 @@ def show_first_question():
 @app.get('/questions/<int:num>')
 def show_questions(num):
     """Shows form of current question with choices"""
+    if num > len(session['responses']):
+        return redirect(f'/questions/{len(session["responses"])}')
+
+    if len(session['responses']) >= len(survey.questions):
+        responses = session['responses']
+        session['responses'] = responses
+
+        return redirect('/completion')
+
+
     question = survey.questions[num]
 
     return render_template('question.html',
@@ -40,12 +50,15 @@ def show_questions(num):
 @app.post('/answer')
 def handle_answer():
     """Handle answer and redirect to next question page"""
-    responses.append(request.form['answer'])
 
-    if len(responses) > len(survey.questions) - 1:
+    responses = session['responses']
+    responses.append(request.form['answer'])
+    session['responses'] = responses
+
+    if len(session['responses']) > len(survey.questions) - 1:
         return redirect('/completion')
 
-    return redirect(f'/questions/{len(responses)}')
+    return redirect(f'/questions/{len(session["responses"])}')
 
 
 @app.get('/completion')
@@ -55,4 +68,4 @@ def show_completion():
 
     return render_template('completion.html',
                            prompts=questions,
-                           responses=responses)
+                           responses=session['responses'])
