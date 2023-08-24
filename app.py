@@ -31,14 +31,15 @@ def show_first_question():
 def show_questions(num):
     """Shows form of current question with choices"""
     if num > len(session['responses']):
+        flash("You're trying to access an invalid question!!!")
         return redirect(f'/questions/{len(session["responses"])}')
 
     if len(session['responses']) >= len(survey.questions):
         responses = session['responses']
         session['responses'] = responses
 
+        flash("You're trying to access an invalid question!!!")
         return redirect('/completion')
-
 
     question = survey.questions[num]
 
