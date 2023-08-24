@@ -6,9 +6,10 @@
 <form action="/answer" method="POST">
 
   <!-- you should have one item like this for every choice -->
+  {% for }
   <p>
     <input type="radio" name="answer" value="value-goes-here">
-    choice-goes-here
+    {{ question.choices }}
   </p>
 
   <button>Continue</button>
